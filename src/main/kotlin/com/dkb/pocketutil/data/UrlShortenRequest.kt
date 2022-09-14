@@ -1,3 +1,11 @@
 package com.dkb.pocketutil.data
 
-data class UrlShortenRequest(val url: String)
+import javax.validation.constraints.Pattern
+
+data class UrlShortenRequest(
+    @field:Pattern(
+        regexp = "^(https?|http)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+        message = "Url should be valid"
+    )
+    val url: String
+)

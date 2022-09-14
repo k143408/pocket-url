@@ -31,7 +31,6 @@ internal class UrlShortenApiTest {
 
     @Test
     fun shouldCreateResponseWithEmpty() {
-
         Mockito.`when`(urlShortenService.create(anyString())).thenReturn("http://pocketurl")
         val requestBody = UrlShortenRequest("https://google.com/")
         mockMvc.perform(
