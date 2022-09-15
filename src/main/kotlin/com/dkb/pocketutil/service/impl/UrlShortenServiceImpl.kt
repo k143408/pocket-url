@@ -8,6 +8,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.net.URI
 import java.net.URL
 
 @Service
@@ -18,7 +19,6 @@ class UrlShortenServiceImpl(
 ) : UrlShortenService {
     val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
-
     override fun create(longUrl: String): String? {
         logger.info("Creating shorten url for {}", longUrl)
         val url = URL(longUrl)
@@ -27,5 +27,15 @@ class UrlShortenServiceImpl(
         val shortUrl = ShortUrl(shortenUrl, urlWithoutProtocol)
         shortUrlRepository.save(shortUrl)
         return baseUrl.plus(shortUrl.shortUrl)
+    }
+
+    override fun getLongUrl(shortUrl: String): URI {
+        return shortUrlRepository.findByShortUrl(shortUrl)
+            .map { s ->
+                URI(s.longUrl)
+            }
+            .orElseThrow {
+                NotFoundException()
+            }
     }
 }

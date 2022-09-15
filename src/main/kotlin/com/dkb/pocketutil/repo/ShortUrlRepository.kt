@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface ShortUrlRepository : CrudRepository<ShortUrl, Long> {
 
+    fun findByShortUrl(shortUrl: String): Optional<ShortUrl>
 }

@@ -19,15 +19,6 @@ class RandomShortenUrlGenerator : ShortUrlGenerator {
         return this.createWithRandomStringPool(8)
     }
 
-    private fun createWithRandomStringPool(length: Int): String {
-        val random = Random()
-        val sb: StringBuilder = StringBuilder()
-
-        for (i in 0 until length) {
-            sb.append(this.stringPool.get(random.nextInt(this.stringPool.length)))
-        }
-        return sb.toString()
-    }
 
     private fun shufflePool() {
         val strPool = this.stringPool.split("")
@@ -43,4 +34,13 @@ class RandomShortenUrlGenerator : ShortUrlGenerator {
         stringPool = sb
     }
 
+    private fun createWithRandomStringPool(length: Int): String {
+        val random = Random()
+        val sb: StringBuilder = StringBuilder()
+
+        for (i in 0 until length) {
+            sb.append(this.stringPool.get(random.nextInt(this.stringPool.length)))
+        }
+        return sb.toString()
+    }
 }

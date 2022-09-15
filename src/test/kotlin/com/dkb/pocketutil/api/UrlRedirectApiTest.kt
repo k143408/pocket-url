@@ -1,9 +1,8 @@
 package com.dkb.pocketutil.api
 
-import com.dkb.pocketutil.data.UrlShortenRequest
 import com.dkb.pocketutil.repo.ShortUrlRepository
 import com.dkb.pocketutil.service.UrlShortenService
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.dkb.pocketutil.service.impl.NotFoundException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyString
@@ -14,36 +13,37 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.net.URI
 
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(controllers = [UrlShortenApi::class])
-internal class UrlShortenApiTest {
+@WebMvcTest(controllers = [UrlRedirectApi::class])
+internal class UrlRedirectApiTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockBean
     private val shortUrlRepository: ShortUrlRepository? = null
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
     @MockBean
     private lateinit var urlShortenService: UrlShortenService
 
     @Test
     fun shouldCreateResponseWithEmpty() {
-        Mockito.`when`(urlShortenService.create(anyString())).thenReturn("http://pocketurl")
-        val requestBody = UrlShortenRequest("https://google.com/")
+        Mockito.`when`(urlShortenService.getLongUrl(anyString()))
+            .thenReturn(URI("http://pocketurl"))
         mockMvc.perform(
-            post("/api/create")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsBytes(requestBody)))
-            .andExpect(status().isCreated)
-            .andExpect(jsonPath("$.url").value("http://pocketurl"))
+            get("/AASDV123"))
+            .andExpect(status().is3xxRedirection)
+    }
 
+    @Test
+    fun shouldGiveNotFoundRequestStatus() {
+        Mockito.`when`(urlShortenService.getLongUrl(anyString()))
+            .thenThrow(NotFoundException())
+        mockMvc.perform(
+            get("/AASDV123"))
+            .andExpect(status().is4xxClientError)
     }
 }
