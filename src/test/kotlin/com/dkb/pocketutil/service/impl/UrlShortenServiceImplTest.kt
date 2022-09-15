@@ -1,6 +1,7 @@
 package com.dkb.pocketutil.service.impl
 
 import com.dkb.pocketutil.domain.ShortUrl
+import com.dkb.pocketutil.exception.NotFoundException
 import com.dkb.pocketutil.repo.ShortUrlRepository
 import com.dkb.pocketutil.service.ShortUrlGenerator
 import org.junit.jupiter.api.*

@@ -1,4 +1,4 @@
-package com.dkb.pocketutil.service.impl
+package com.dkb.pocketutil.exception
 
 
 class NotFoundException : RuntimeException() {
